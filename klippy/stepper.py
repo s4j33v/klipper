@@ -142,6 +142,8 @@ class MCU_stepper:
         mcu_pos_dist = params['pos'] * self._step_dist
         if self._invert_dir:
             mcu_pos_dist = -mcu_pos_dist
+        logging.info("mcu trigger position (%d) %.6f",
+                     params['pos'], mcu_pos_dist)
         self._mcu_position_offset = mcu_pos_dist - self.get_commanded_position()
     def set_trapq(self, tq):
         if tq is None:
