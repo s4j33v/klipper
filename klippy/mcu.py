@@ -79,6 +79,8 @@ class MCU_endstop:
             if params['homing']:
                 self._last_sent_time = params['#sent_time']
             else:
+                t = self._mcu.clock_to_print_time(params['next_clock'])
+                logging.info("Endstop trigger at %.6f", t)
                 self._min_query_time = self._reactor.NEVER
                 self._reactor.async_complete(self._trigger_completion, True)
     def _home_retry(self, eventtime):
