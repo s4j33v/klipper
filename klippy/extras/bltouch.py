@@ -193,6 +193,7 @@ class BLTouchEndstopWrapper:
                 raise homing.EndstopError("BLTouch failed to deploy")
     def home_start(self, print_time, sample_time, sample_count, rest_time):
         rest_time = min(rest_time, ENDSTOP_REST_TIME)
+        logging.info("bltouch probe @ %.6f (check=%.6f)", print_time, rest_time)
         return self.mcu_endstop.home_start(print_time, sample_time,
                                            sample_count, rest_time)
     def get_position_endstop(self):
