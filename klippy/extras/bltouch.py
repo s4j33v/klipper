@@ -94,6 +94,7 @@ class BLTouchEndstopWrapper:
         else:
             self.next_cmd_time = print_time
     def send_cmd(self, cmd, duration=MIN_CMD_TIME):
+        logging.info("BLTouch send %s at %.6f", cmd, self.next_cmd_time)
         self.mcu_pwm.set_pwm(self.next_cmd_time, Commands[cmd] / SIGNAL_PERIOD)
         # Translate duration to ticks to avoid any secondary mcu clock skew
         mcu = self.mcu_pwm.get_mcu()
