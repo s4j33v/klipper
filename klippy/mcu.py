@@ -79,7 +79,8 @@ class MCU_endstop:
             if params['homing']:
                 self._last_sent_time = params['#sent_time']
             else:
-                t = self._mcu.clock_to_print_time(params['next_clock'])
+                next_clock = self._mcu.clock32_to_clock64(params['next_clock'])
+                t = self._mcu.clock_to_print_time(next_clock)
                 logging.info("Endstop trigger at %.6f", t)
                 self._min_query_time = self._reactor.NEVER
                 self._reactor.async_complete(self._trigger_completion, True)
