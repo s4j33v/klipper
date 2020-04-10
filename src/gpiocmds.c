@@ -128,6 +128,7 @@ soft_pwm_toggle_event(struct timer *timer)
 {
     struct soft_pwm_s *s = container_of(timer, struct soft_pwm_s, timer);
     gpio_out_toggle_noirq(s->pin);
+    output("pwm toggle %c @ %u", s->flags & SPF_ON, timer_read_time());
     s->flags ^= SPF_ON;
     uint32_t waketime = s->timer.waketime;
     if (s->flags & SPF_ON)
@@ -153,6 +154,7 @@ soft_pwm_load_event(struct timer *timer)
     uint8_t flags = s->flags >> 4;
     s->flags = flags;
     gpio_out_write(s->pin, flags & SPF_ON);
+    output("pwm write %c @ %u", flags & SPF_ON, timer_read_time());
     if (!(flags & SPF_TOGGLING)) {
         // Pin is in an always on (value=256) or always off (value=0) state
         if (!(flags & SPF_CHECK_END))
