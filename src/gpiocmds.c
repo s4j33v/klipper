@@ -209,8 +209,11 @@ command_schedule_soft_pwm_out(uint32_t *args)
     s->next_on_duration = next_on_duration;
     s->next_off_duration = next_off_duration;
     s->flags = (s->flags & 0xf) | next_flags;
+    uint8_t flags = s->flags, lazy = 0;
+    uint32_t prevwake = s->timer.waketime;
     if (s->flags & SPF_TOGGLING && timer_is_before(s->timer.waketime, time)) {
         // soft_pwm_toggle_event() will schedule a load event when ready
+        lazy = 1;
     } else {
         // Schedule the loading of the pwm parameters at the requested time
         sched_del_timer(&s->timer);
@@ -219,6 +222,10 @@ command_schedule_soft_pwm_out(uint32_t *args)
         sched_add_timer(&s->timer);
     }
     irq_enable();
+    output("schedule pwm clock=%u on=%u off=%u"
+           " new_clock=%u prev_clock=%u flags=%c lazy=%c"
+           , timer_read_time(), next_on_duration, next_off_duration
+           , time, prevwake, flags, lazy);
 }
 DECL_COMMAND(command_schedule_soft_pwm_out,
              "schedule_soft_pwm_out oid=%c clock=%u on_ticks=%u");
